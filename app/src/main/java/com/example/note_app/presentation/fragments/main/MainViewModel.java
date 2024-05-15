@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.note_app.domain.models.NoteModel;
 import com.example.note_app.domain.usecases.authUseCases.UserLogOutUseCase;
+import com.example.note_app.domain.usecases.notesUseCases.DeleteNoteItemUseCase;
 import com.example.note_app.domain.usecases.notesUseCases.GetAllNotesUseCase;
 
 import java.util.List;
@@ -17,42 +18,49 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
-    private final GetAllNotesUseCase getAllNotesUseCase;
-    private final UserLogOutUseCase userLogOutUseCase;
-    private MutableLiveData<List<NoteModel>> notesLiveData;
-    private Disposable disposable;
+	private final GetAllNotesUseCase getAllNotesUseCase;
+	private final UserLogOutUseCase userLogOutUseCase;
+	private final DeleteNoteItemUseCase deleteNoteItemUseCase;
 
-    @Inject
-    public MainViewModel(GetAllNotesUseCase getAllNotesUseCase, UserLogOutUseCase userLogOutUseCase) {
-        this.getAllNotesUseCase = getAllNotesUseCase;
-        this.userLogOutUseCase = userLogOutUseCase;
-        this.notesLiveData = new MutableLiveData<>();
-    }
+	private MutableLiveData<List<NoteModel>> notesLiveData;
+	private Disposable disposable;
 
-
-    public LiveData<List<NoteModel>> getNotes(){
-        return notesLiveData;
-    }
-
-    public void loadNotes(){
-        disposable = getAllNotesUseCase.execute()
-                .subscribe(
-                        notes -> notesLiveData.setValue(notes),
-                        throwable -> {
-                        }
-                );
-    }
-
-    public void userLogOut(){
-        userLogOutUseCase.execute();
-    }
+	@Inject
+	public MainViewModel(
+			GetAllNotesUseCase getAllNotesUseCase,
+			UserLogOutUseCase userLogOutUseCase,
+			DeleteNoteItemUseCase deleteNoteItemUseCase
+	) {
+		this.getAllNotesUseCase = getAllNotesUseCase;
+		this.userLogOutUseCase = userLogOutUseCase;
+		this.deleteNoteItemUseCase = deleteNoteItemUseCase;
+		this.notesLiveData = new MutableLiveData<>();
+	}
 
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-    }
+	public LiveData<List<NoteModel>> getNotes() {
+		return notesLiveData;
+	}
+
+	public void loadNotes() {
+		disposable = getAllNotesUseCase.execute()
+				.subscribe(
+						notes -> notesLiveData.setValue(notes),
+						throwable -> {
+						}
+				);
+	}
+
+	public void userLogOut() {
+		userLogOutUseCase.execute();
+	}
+
+
+	@Override
+	protected void onCleared() {
+		super.onCleared();
+		if (disposable != null && ! disposable.isDisposed()) {
+			disposable.dispose();
+		}
+	}
 }
