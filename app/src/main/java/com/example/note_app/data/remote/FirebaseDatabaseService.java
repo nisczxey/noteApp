@@ -36,8 +36,8 @@ public class FirebaseDatabaseService {
                 .setValue(noteDto);
     }
 
-    public boolean deleteUserNote(){
-        return  true;
+    public void deleteUserNote(String noteItemId){
+        ;
     }
 
     public NoteDto getUserNote(String userId, String noteId){

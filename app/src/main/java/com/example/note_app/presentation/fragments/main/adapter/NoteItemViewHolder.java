@@ -16,4 +16,5 @@ public class NoteItemViewHolder extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.tv_item_title);
         description = itemView.findViewById(R.id.tv_item_desc);
     }
+
 }

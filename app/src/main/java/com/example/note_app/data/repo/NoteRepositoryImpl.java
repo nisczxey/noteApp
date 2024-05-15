@@ -40,7 +40,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void editNoteItem(String noteItemId) {
-
+        db.deleteUserNote(noteItemId);
     }
 
     @Override
