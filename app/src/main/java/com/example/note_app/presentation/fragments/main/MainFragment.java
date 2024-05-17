@@ -70,7 +70,7 @@ public class MainFragment extends Fragment {
 
 			@Override
 			public void onNoteItemClick(NoteModel note) {
-				Toast.makeText(getContext(), "aaaa", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getView().getContext(), "aaaa", Toast.LENGTH_SHORT).show();
 			}
 
 		});
