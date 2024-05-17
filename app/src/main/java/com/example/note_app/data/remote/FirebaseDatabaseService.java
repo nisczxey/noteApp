@@ -4,6 +4,7 @@ package com.example.note_app.data.remote;
 import androidx.annotation.NonNull;
 
 import com.example.note_app.data.dto.NoteDto;
+import com.example.note_app.data.utils.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,21 +24,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FirebaseDatabaseService {
 
     private  final FirebaseDatabase db;
+    private final DatabaseReference dbRef;
 
 
     @Inject
     public FirebaseDatabaseService(FirebaseDatabase db) {
         this.db = db;
+        this.dbRef = db.getReference(Constants.DB_REFERENCE_PATH);
     }
 
     public void addUserNote(String userId, NoteDto noteDto){
-        db.getReference("users").child(userId).child("notes")
+        dbRef.child(userId).child(Constants.DB_PATH_NOTES)
                 .child(noteDto.getId())
                 .setValue(noteDto);
     }
 
-    public void deleteUserNote(String noteItemId){
-        ;
+    public void deleteUserNote(String userId,String noteItemId){
+        dbRef.child(userId).child(Constants.DB_PATH_NOTES).child(noteItemId).removeValue();
     }
 
     public NoteDto getUserNote(String userId, String noteId){
@@ -46,7 +49,8 @@ public class FirebaseDatabaseService {
 
     public Observable<List<NoteDto>> getAllUserNotes(String userId){
         return Observable.create((ObservableEmitter<List<NoteDto>> emitter) -> {
-                    DatabaseReference notesRef = db.getReference("users").child(userId).child("notes");
+                    DatabaseReference notesRef =
+                            dbRef.child(userId).child(Constants.DB_PATH_NOTES);
                     ValueEventListener valueEventListener = new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -71,8 +75,7 @@ public class FirebaseDatabaseService {
     public  void editUserNoteById(){}
 
     public  void createUserFolder(String userId){
-        DatabaseReference userReference = db.getReference("users").child(userId);
-        userReference.setValue(true);
+         dbRef.child(userId).setValue(true);
     }
 
 }

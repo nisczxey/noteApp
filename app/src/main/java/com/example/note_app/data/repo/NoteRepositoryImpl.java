@@ -27,7 +27,7 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void deleteNoteItem(String noteItemId) {
-
+        db.deleteUserNote(firebaseAuthService.getCurrentUserId(), noteItemId);
     }
 
     @Override
@@ -39,9 +39,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public void editNoteItem(String noteItemId) {
-        db.deleteUserNote(noteItemId);
-    }
+    public void editNoteItem(String noteItemId) {}
 
     @Override
     public NoteModel getNoteItem(String noteItemId) {

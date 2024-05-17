@@ -51,6 +51,10 @@ public class MainViewModel extends ViewModel {
 				);
 	}
 
+	public void deleteNoteById(String noteId){
+		deleteNoteItemUseCase.execute(noteId);
+	}
+
 	public void userLogOut() {
 		userLogOutUseCase.execute();
 	}

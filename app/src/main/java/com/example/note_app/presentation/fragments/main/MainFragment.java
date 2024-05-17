@@ -65,7 +65,7 @@ public class MainFragment extends Fragment {
 		adapter.setOnNoteItemClickListener(new OnNoteItemClickListener() {
 			@Override
 			public void onNoteItemLongClick(View view, NoteModel note) {
-				showContextMenu(view);
+				showContextMenu(view, note.getId());
 			}
 
 			@Override
@@ -77,7 +77,7 @@ public class MainFragment extends Fragment {
 
 	}
 
-	private void showContextMenu(View view) {
+	private void showContextMenu(View view, String noteId) {
 		PopupMenu popup = new PopupMenu(getContext(), view);
 		popup.inflate(R.menu.context_menu);
 		popup.setOnMenuItemClickListener(menuItem -> {
@@ -87,6 +87,7 @@ public class MainFragment extends Fragment {
 			} else if (itemId == R.id.menu_edit) {
 				return true;
 			} else if (itemId == R.id.menu_delete) {
+				viewModel.deleteNoteById(noteId);
 				return true;
 			} else {
 				return false;
