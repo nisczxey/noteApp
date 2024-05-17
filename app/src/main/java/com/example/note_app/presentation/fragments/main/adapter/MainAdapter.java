@@ -51,13 +51,19 @@ public class MainAdapter extends ListAdapter<NoteModel, NoteItemViewHolder> {
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					if (itemClickListener != null) {
-						itemClickListener.onNoteItemLongClick(
-								view,
-								getItem(viewHolder.getAdapterPosition())
-						);
-						return true;
-					}
+					view.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							if (itemClickListener != null && view.isPressed()) {
+								itemClickListener.onNoteItemLongClick(
+										view,
+										getItem(viewHolder.getAdapterPosition())
+								);
+							}
+						}
+					}, 300);
+				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+					view.cancelLongPress();
 				}
 				return false;
 			}
