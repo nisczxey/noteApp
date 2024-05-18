@@ -12,6 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class NoteRepositoryImpl implements NoteRepository {
 
@@ -42,8 +43,9 @@ public class NoteRepositoryImpl implements NoteRepository {
     public void editNoteItem(String noteItemId) {}
 
     @Override
-    public NoteModel getNoteItem(String noteItemId) {
-        return null;
+    public Single<NoteModel> getNoteItem(String noteItemId) {
+        return db.getUserNote(firebaseAuthService.getCurrentUserId(), noteItemId)
+                .map(noteMapper::mapDtoToNoteModel);
     }
 
     @Override

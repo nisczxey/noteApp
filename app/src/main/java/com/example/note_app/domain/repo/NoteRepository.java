@@ -5,6 +5,7 @@ import com.example.note_app.domain.models.NoteModel;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public interface NoteRepository {
 
@@ -14,7 +15,7 @@ public interface NoteRepository {
 
     void editNoteItem(String noteItemId);
 
-    NoteModel getNoteItem(String noteItemId);
+    Single<NoteModel> getNoteItem(String noteItemId);
 
     Observable<List<NoteModel>> getAllNoteItems();
 
