@@ -19,63 +19,86 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FirebaseDatabaseService {
 
-    private  final FirebaseDatabase db;
-    private final DatabaseReference dbRef;
+	private final FirebaseDatabase db;
+	private final DatabaseReference dbRef;
 
 
-    @Inject
-    public FirebaseDatabaseService(FirebaseDatabase db) {
-        this.db = db;
-        this.dbRef = db.getReference(Constants.DB_REFERENCE_PATH);
-    }
+	@Inject
+	public FirebaseDatabaseService(FirebaseDatabase db) {
+		this.db = db;
+		this.dbRef = db.getReference(Constants.DB_REFERENCE_PATH);
+	}
 
-    public void addUserNote(String userId, NoteDto noteDto){
-        dbRef.child(userId).child(Constants.DB_PATH_NOTES)
-                .child(noteDto.getId())
-                .setValue(noteDto);
-    }
+	public void addUserNote(String userId, NoteDto noteDto) {
+		dbRef.child(userId).child(Constants.DB_PATH_NOTES)
+				.child(noteDto.getId())
+				.setValue(noteDto);
+	}
 
-    public void deleteUserNote(String userId,String noteItemId){
-        dbRef.child(userId).child(Constants.DB_PATH_NOTES).child(noteItemId).removeValue();
-    }
+	public void deleteUserNote(String userId, String noteItemId) {
+		dbRef.child(userId).child(Constants.DB_PATH_NOTES).child(noteItemId).removeValue();
+	}
 
-    public NoteDto getUserNote(String userId, String noteId){
-        return  null;
-    }
+	public Single<NoteDto> getUserNote(String userId, String noteId) {
+		return Single.create(emitter -> {
+			DatabaseReference noteRef =
+					dbRef.child(userId).child(Constants.DB_PATH_NOTES).child(noteId);
+			noteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+				@Override
+				public void onDataChange(@NonNull DataSnapshot snapshot) {
+					NoteDto note = snapshot.getValue(NoteDto.class);
+					if (note != null) {
+						emitter.onSuccess(note);
+					} else {
+						emitter.onError(new Throwable("note not found"));
+					}
+				}
 
-    public Observable<List<NoteDto>> getAllUserNotes(String userId){
-        return Observable.create((ObservableEmitter<List<NoteDto>> emitter) -> {
-                    DatabaseReference notesRef =
-                            dbRef.child(userId).child(Constants.DB_PATH_NOTES);
-                    ValueEventListener valueEventListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            List<NoteDto> notesList = new ArrayList<>();
-                            for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-                                NoteDto note = noteSnapshot.getValue(NoteDto.class);
-                                notesList.add(note);
-                            }
-                            emitter.onNext(notesList);
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            emitter.onError(databaseError.toException());
-                        }
-                    };
-                    notesRef.addValueEventListener(valueEventListener);
-                    emitter.setCancellable(() -> notesRef.removeEventListener(valueEventListener));
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
+				@Override
+				public void onCancelled(@NonNull DatabaseError error) {
+					emitter.onError(error.toException());
+				}
+			});
+		});
+	}
 
-    public  void editUserNoteById(){}
+	public Observable<List<NoteDto>> getAllUserNotes(String userId) {
+		return Observable.create((ObservableEmitter<List<NoteDto>> emitter) -> {
+					DatabaseReference notesRef =
+							dbRef.child(userId).child(Constants.DB_PATH_NOTES);
+					ValueEventListener valueEventListener = new ValueEventListener() {
+						@Override
+						public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+							List<NoteDto> notesList = new ArrayList<>();
+							for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+								NoteDto note = noteSnapshot.getValue(NoteDto.class);
+								notesList.add(note);
+							}
+							emitter.onNext(notesList);
+						}
 
-    public  void createUserFolder(String userId){
-         dbRef.child(userId).setValue(true);
-    }
+						@Override
+						public void onCancelled(@NonNull DatabaseError databaseError) {
+							emitter.onError(databaseError.toException());
+						}
+					};
+					notesRef.addValueEventListener(valueEventListener);
+					emitter.setCancellable(() -> notesRef.removeEventListener(valueEventListener));
+				}).subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
+	}
+
+	public void editUserNoteById() {
+
+	}
+
+	public void createUserFolder(String userId) {
+		dbRef.child(userId).setValue(true);
+	}
 
 }

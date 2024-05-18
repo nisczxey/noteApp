@@ -26,9 +26,10 @@
     <string name="someDataIsEmpty">введены не все значения</string>
     <string name="savingIsSuccess">Данные успешно сохранены</string>
     <string name="fields_dont_must_be_empty">Поля не должны быть пусты</string>
-    <string name="search">поиск</string>
+    <string name="search">Поиск</string>
     <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
-    <string name="settings">настройки</string>
+    <string name="settings">Настройки</string>
 </resources>

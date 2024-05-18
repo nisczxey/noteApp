@@ -8,6 +8,7 @@ import com.example.note_app.domain.models.NoteModel;
 import com.example.note_app.domain.usecases.authUseCases.UserLogOutUseCase;
 import com.example.note_app.domain.usecases.notesUseCases.DeleteNoteItemUseCase;
 import com.example.note_app.domain.usecases.notesUseCases.GetAllNotesUseCase;
+import com.example.note_app.domain.usecases.notesUseCases.GetNoteItemUseCase;
 
 import java.util.List;
 
@@ -21,20 +22,25 @@ public class MainViewModel extends ViewModel {
 	private final GetAllNotesUseCase getAllNotesUseCase;
 	private final UserLogOutUseCase userLogOutUseCase;
 	private final DeleteNoteItemUseCase deleteNoteItemUseCase;
+	private  final GetNoteItemUseCase getNoteItemUseCase;
 
 	private MutableLiveData<List<NoteModel>> notesLiveData;
+	private  MutableLiveData<NoteModel> noteLD;
 	private Disposable disposable;
 
 	@Inject
 	public MainViewModel(
 			GetAllNotesUseCase getAllNotesUseCase,
 			UserLogOutUseCase userLogOutUseCase,
-			DeleteNoteItemUseCase deleteNoteItemUseCase
+			DeleteNoteItemUseCase deleteNoteItemUseCase,
+			GetNoteItemUseCase getNoteItemUseCase
 	) {
 		this.getAllNotesUseCase = getAllNotesUseCase;
 		this.userLogOutUseCase = userLogOutUseCase;
 		this.deleteNoteItemUseCase = deleteNoteItemUseCase;
+		this.getNoteItemUseCase = getNoteItemUseCase;
 		this.notesLiveData = new MutableLiveData<>();
+		this.noteLD = new MutableLiveData<>();
 	}
 
 
@@ -57,6 +63,14 @@ public class MainViewModel extends ViewModel {
 
 	public void userLogOut() {
 		userLogOutUseCase.execute();
+	}
+
+	public LiveData<NoteModel> getNote(String noteId){
+		disposable =
+				getNoteItemUseCase.execute(noteId).subscribe(
+						noteModel -> noteLD.setValue(noteModel)
+				);
+		return noteLD;
 	}
 
 

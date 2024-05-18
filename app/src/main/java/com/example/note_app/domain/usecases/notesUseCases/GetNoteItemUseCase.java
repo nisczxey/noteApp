@@ -3,6 +3,8 @@ package com.example.note_app.domain.usecases.notesUseCases;
 import com.example.note_app.domain.models.NoteModel;
 import com.example.note_app.domain.repo.NoteRepository;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class GetNoteItemUseCase {
     private final NoteRepository noteRepository;
 
@@ -10,7 +12,7 @@ public class GetNoteItemUseCase {
         this.noteRepository = noteRepository;
     }
 
-    public NoteModel execute(String noteItemId){
+    public Single<NoteModel> execute(String noteItemId){
        return noteRepository.getNoteItem(noteItemId);
     }
 

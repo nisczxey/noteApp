@@ -1,5 +1,6 @@
 package com.example.note_app.presentation.fragments.main;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,35 +67,49 @@ public class MainFragment extends Fragment {
 		adapter.setOnNoteItemClickListener(new OnNoteItemClickListener() {
 			@Override
 			public void onNoteItemLongClick(View view, NoteModel note) {
-				showContextMenu(view, note.getId());
+				showContextMenu(view, note);
 			}
 
 			@Override
 			public void onNoteItemClick(NoteModel note) {
-				Toast.makeText(getView().getContext(), "aaaa", Toast.LENGTH_SHORT).show();
+				createNoteAlertDialog(note.getNoteTitle(), note.getNoteText());
 			}
-
 		});
 
 	}
 
-	private void showContextMenu(View view, String noteId) {
+	private void showContextMenu(View view, NoteModel note) {
 		PopupMenu popup = new PopupMenu(getContext(), view);
 		popup.inflate(R.menu.context_menu);
 		popup.setOnMenuItemClickListener(menuItem -> {
 			int itemId = menuItem.getItemId();
 			if (itemId == R.id.menu_open) {
+				createNoteAlertDialog(note.getNoteTitle(), note.getNoteText());
 				return true;
 			} else if (itemId == R.id.menu_edit) {
 				return true;
 			} else if (itemId == R.id.menu_delete) {
-				viewModel.deleteNoteById(noteId);
+				viewModel.deleteNoteById(note.getId());
 				return true;
 			} else {
 				return false;
 			}
 		});
 		popup.show();
+	}
+
+	private  void createNoteAlertDialog(String noteName, String noteDescription){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		LayoutInflater inflater = getLayoutInflater();
+		View dialogView = inflater.inflate(R.layout.dialog_note_details, null);
+		builder.setView(dialogView);
+		TextView noteTitle = dialogView.findViewById(R.id.dialog_note_title);
+		TextView noteDesc = dialogView.findViewById(R.id.dialog_note_description);
+		noteTitle.setText(noteName);
+		noteDesc.setText(noteDescription);
+		builder.setPositiveButton(getString(R.string.close),((dialogInterface, i) ->
+				dialogInterface.dismiss()));
+		builder.create().show();
 	}
 
 
