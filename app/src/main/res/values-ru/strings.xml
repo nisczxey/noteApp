@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">NoteApp</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">почта</string>
+    <string name="password">пароль</string>
+    <string name="log_in">Войти</string>
+    <string name="or">Или</string>
+    <string name="unknown_user">такого пользователя не существует</string>
+    <string name="create_an_account">Создать аккаунт</string>
+    <string name="user_register">регистрация пользователя</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+    <string name="register">Регистрация</string>
+    <string name="register_is_success">Регистрация прошла успешно</string>
+    <string name="something_went_wrong">что-то пошло не так</string>
+    <string name="password_is_not_confirmed">пароль не подтверждён</string>
+    <string name="email_adress_is_not_valid">Почта некорректна</string>
+    <string name="minimum_password_length_6_characters">Минимальная длина пароля:6 символов</string>
+    <string name="log_out">Выйти</string>
+    <string name="title">Название</string>
+    <string name="description">Текст</string>
+    <string name="note_title">Название заметки</string>
+    <string name="creating_new_note">создание новой заметки</string>
+    <string name="text">текст</string>
+    <string name="save">сохранить</string>
+    <string name="someDataIsEmpty">введены не все значения</string>
+    <string name="savingIsSuccess">Данные успешно сохранены</string>
+    <string name="fields_dont_must_be_empty">Поля не должны быть пусты</string>
+    <string name="search">Поиск</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="settings">Настройки</string>
+    <string name="unknown_screenmode">unknown screenMode</string>
+    <string name="editing_a_note">editing a note</string>
+</resources>

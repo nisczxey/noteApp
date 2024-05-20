@@ -93,8 +93,8 @@ public class FirebaseDatabaseService {
 				.observeOn(AndroidSchedulers.mainThread());
 	}
 
-	public void editUserNoteById() {
-
+	public void editUserNoteById(String userId, String noteId, NoteDto updatedNoteDto) {
+		dbRef.child(userId).child(Constants.DB_PATH_NOTES).child(noteId).setValue(updatedNoteDto);
 	}
 
 	public void createUserFolder(String userId) {

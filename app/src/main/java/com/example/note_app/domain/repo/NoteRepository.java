@@ -13,7 +13,7 @@ public interface NoteRepository {
 
     void addNoteItem(NoteModel noteModel);
 
-    void editNoteItem(String noteItemId);
+    void editNoteItem(NoteModel noteModel);
 
     Single<NoteModel> getNoteItem(String noteItemId);
 

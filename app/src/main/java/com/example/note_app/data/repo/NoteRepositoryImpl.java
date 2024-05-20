@@ -40,7 +40,13 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public void editNoteItem(String noteItemId) {}
+    public void editNoteItem(NoteModel noteModel) {
+        db.editUserNoteById(
+                firebaseAuthService.getCurrentUserId(),
+                noteModel.getId(),
+                noteMapper.mapNoteModelToDto(noteModel)
+        );
+    }
 
     @Override
     public Single<NoteModel> getNoteItem(String noteItemId) {
