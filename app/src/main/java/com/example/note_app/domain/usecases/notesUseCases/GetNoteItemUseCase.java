@@ -1,5 +1,7 @@
 package com.example.note_app.domain.usecases.notesUseCases;
 
+import android.util.Log;
+
 import com.example.note_app.domain.models.NoteModel;
 import com.example.note_app.domain.repo.NoteRepository;
 

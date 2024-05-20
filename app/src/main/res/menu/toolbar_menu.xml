@@ -7,9 +7,6 @@
        android:id="@+id/menu_item_search"
        android:icon="@drawable/ic_search"
        app:showAsAction="always"/>
-    <item
-        android:title="@string/settings"
-        android:id="@+id/menu_item_settings"/>
 
     <item
         android:title="@string/log_out"

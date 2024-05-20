@@ -1,7 +1,9 @@
 package com.example.note_app.presentation.fragments.main;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +28,7 @@ import com.example.note_app.presentation.fragments.auth.signIn.SignInFragment;
 import com.example.note_app.presentation.fragments.createNote.CreateNoteFragment;
 import com.example.note_app.presentation.fragments.main.adapter.MainAdapter;
 import com.example.note_app.presentation.fragments.main.adapter.OnNoteItemClickListener;
-import com.example.note_app.presentation.fragments.settings.SettingsFragment;
+import com.example.note_app.presentation.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -58,11 +59,11 @@ public class MainFragment extends Fragment {
 
 	private void initClicks() {
 		binding.fabAdd.setOnClickListener(v -> {
-			FragmentTransaction fragmentTransaction = getActivity().
-					getSupportFragmentManager().beginTransaction();
-			CreateNoteFragment fragment = new CreateNoteFragment();
-			fragmentTransaction.replace(R.id.fragment_container, fragment)
-					.addToBackStack(null).commit();
+			CreateNoteFragment fragment = CreateNoteFragment.newInstanceInCreatingMode(
+					Constants.SCREEN_MODE_KEY,
+					Constants.ADD_SCREEN_MODE
+					);
+			createCreateNoteFragment(fragment);
 		});
 		adapter.setOnNoteItemClickListener(new OnNoteItemClickListener() {
 			@Override
@@ -87,6 +88,13 @@ public class MainFragment extends Fragment {
 				createNoteAlertDialog(note.getNoteTitle(), note.getNoteText());
 				return true;
 			} else if (itemId == R.id.menu_edit) {
+				CreateNoteFragment fragment = CreateNoteFragment.newInstanceInEditingMode(
+						Constants.SCREEN_MODE_KEY,
+						Constants.EDIT_SCREEN_MODE,
+						Constants.NOTE_ID_KEY,
+						note.getId()
+				);
+				createCreateNoteFragment(fragment);
 				return true;
 			} else if (itemId == R.id.menu_delete) {
 				viewModel.deleteNoteById(note.getId());
@@ -109,8 +117,18 @@ public class MainFragment extends Fragment {
 		noteDesc.setText(noteDescription);
 		builder.setPositiveButton(getString(R.string.close),((dialogInterface, i) ->
 				dialogInterface.dismiss()));
-		builder.create().show();
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
 	}
+
+	private  void createCreateNoteFragment(CreateNoteFragment fragment){
+		FragmentTransaction fragmentTransaction = getActivity().
+				getSupportFragmentManager().beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_container, fragment)
+				.addToBackStack(null).commit();
+	}
+
 
 
 	private void setupRecyclerView() {
@@ -134,14 +152,7 @@ public class MainFragment extends Fragment {
 					SignInFragment fragment = new SignInFragment();
 					fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
 					return true;
-				} else if(menuItem.getItemId() == R.id.menu_item_settings){
-					FragmentTransaction fragmentTransaction = getActivity().
-							getSupportFragmentManager().beginTransaction();
-					SettingsFragment fragment = new SettingsFragment();
-					fragmentTransaction.replace(R.id.fragment_container, fragment)
-							.addToBackStack(null).commit();
-					return true;
-				}else {
+				} else {
 					return false;
 				}
 			}

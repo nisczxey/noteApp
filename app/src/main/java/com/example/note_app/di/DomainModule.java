@@ -62,5 +62,4 @@ public class DomainModule {
     public GetNoteItemUseCase provideGetNoteItemUseCase(NoteRepository noteRepository){
         return  new GetNoteItemUseCase(noteRepository);
     }
-
 }
